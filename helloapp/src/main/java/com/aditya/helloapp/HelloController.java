@@ -14,8 +14,8 @@ public class HelloController {
 	 * return "Hello"+ name; }
 	 */
 	
-	@PostMapping("/welcome")
-	public String welcome(@RequestBody String name) {
-		return "Hello"+ name;
+	@PostMapping("/user")
+	public User createUser(@RequestBody User user) {
+		return user;
 	}
 }
