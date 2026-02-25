@@ -1,15 +1,21 @@
 package com.aditya.helloapp.service;
 
 import org.springframework.stereotype.Service;
+
 import com.aditya.helloapp.model.User;
+import com.aditya.helloapp.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @Service
 public class UserService {
 
-	public User processUser(User user) {
-		user.setName(user.getName().toUpperCase());
+	@Autowired
+	private UserRepository userRepository;
+	
+	public User saveUser(User user) {
 		
-		return user;
+		return userRepository.save(user);
 	}
 
 }
