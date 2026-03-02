@@ -1,12 +1,12 @@
 package com.aditya.helloapp.service;
 
-import org.springframework.stereotype.Service;
-
+import com.aditya.helloapp.exception.ResourceNotFoundException;
 import com.aditya.helloapp.model.User;
 import com.aditya.helloapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List; // ✅ Added
+import java.util.List;
 
 @Service
 public class UserService {
@@ -19,25 +19,28 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
-    // ✅ New: Get all users
+    // Get all users
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     public User updateUser(Long id, User updatedUser) {
-        User user21 = userRepository.findById(id).orElse(null);
-        if (user21 != null) {
-            user21.setName(updatedUser.getName());
-            user21.setAge(updatedUser.getAge());
-            return userRepository.save(user21);
-        }
-        return null;
+        User existing = userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+        existing.setName(updatedUser.getName());
+        existing.setAge(updatedUser.getAge());
+        return userRepository.save(existing);
     }
 
     public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
         userRepository.deleteById(id);
     }
 }
