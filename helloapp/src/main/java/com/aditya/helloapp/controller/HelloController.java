@@ -2,42 +2,42 @@ package com.aditya.helloapp.controller;
 
 import com.aditya.helloapp.model.User;
 import com.aditya.helloapp.service.UserService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-//import java.util.List;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class HelloController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    // Prefer constructor injection
-    public HelloController(UserService userService) {
-        this.userService = userService;
-    }
-
-    // Health/home check
-    @GetMapping("/")
-    public String home() {
-        return "Hello, World!";
-    }
-
-    // Create a user
     @PostMapping
     public User createUser(@RequestBody User user) {
-        return userService.saveUser(user); // renamed to camelCase
+        return userService.saveUser(user);
     }
 
-    // List all users (helpful to verify)
-//    @GetMapping
-//    public List<User> getAllUsers() {
-//        return userService.findAll();
-//    }
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 
-    // Optional: greet example (uncomment if you want it)
-    // @GetMapping("/greet/{name}")
-    // public String greet(@PathVariable String name) {
-    //     return "Hello " + name;
-    // }
+  
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.updateUser(id, user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
 }
